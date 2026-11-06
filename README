@@ -1,0 +1,28 @@
+=======================================================================
+
+README for NEMURO version updated as on 31 Oct 2023
+Author IVG Bhavani
+========================================================================
+This 1-D NEMURO version runs for individual stations (longitude latitude)
+User need to prepare longitude latitude data in "text format"
+
+For example write as below in "stations.txt" file
+ 80.50 11.00
+ 81.50 12.50
+
+
+please change accordingly in " USER INPUT " in "run_latlon.sh" file
+
+
+line-2 while [ $i -le 2 ]   #<=== USER INPUT 1
+				 replace 2 with user input to run number of stations from the text file
+line-20 set reg/t=01-jan-2011:31-dec-2015  !! <=== USER IDIR_INPUT 2
+				 replace the calendar dates for interested time region
+
+===========================================================================
+
+To run NEMURO model 
+$sh run_latlon.sh
+
+You will see OUT_80.50_11.00.txt in OUTPUT folder, after successful run
+If any error ERR_80.50_11.00.txt file will be updated

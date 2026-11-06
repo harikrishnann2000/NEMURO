@@ -1,0 +1,11 @@
+cancel data/all
+
+define axis/z=2.5:252.5:5/units=meters/depth zfnr
+define axis/t=01-jan-2009:31-dec-2018:1/calendar=GREGORIAN/units=days tfnr
+define grid/z=zfnr/t=tfnr gfnr
+
+file/var=temp,salt,ps,pl,zs,zl,zp,no3,nh4,pom,sioh4,ca,tco2,caco3,talk,dom,ph,co2ex,pCO2surf,xco2/column=20/g=gfnr \
+"/home/users/harikrishnann/NEMUROHK/OUT_75.570000_10.000000.txt"
+
+set region/t="01-JAN-2009":"31-DEC-2018"/z=2.5:252.5
+
