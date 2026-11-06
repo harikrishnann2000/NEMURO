@@ -1,13 +1,6 @@
-cccccccccccccccccccccccccccc include param.h ccccccccccccccccccccccccccccc
-c
-c
-c	parameter definitions for offline model
-c
-c
-c
-c
-ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+C     CLEANED PARAMETER HEADER
 
+C     Transport and shared parameter declarations
 	double precision rx, Ah, rintegral_C, rvolume_integral, rxb
 	double precision adv_ve, adv_vw, adv_vn, adv_vs,adv_vt,adv_vb
 	double precision adv_vtb,adv_vbb
@@ -53,7 +46,6 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
         common /param/ split_dt, split_dtts, loop_split
         common /param/ day2sec
 
-
         common /param/ days, loop_start
         common /param/ number_of_snap, month, month_start, iyear_start
         common /param/ month_start_snap, month_co2
@@ -79,23 +71,15 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 	common /param/ rintegral_B
 
-
-c
-c====================== polar.h =====================================
-c polar co-ordinate specification for the model
-c
+C     Coordinate-system declarations
         common /param/ dphi, dthe, d2phi, d2the, dphi2, dthe2, Re
 	real variable_dyd (jmt)
-c
-c====================== matric.h ===================================
-c
 	common /param/ deg2meter
         common /param/ dxd, dyd, reflon, reflat, reflat_start
 	common /param/ dx, dy, d2x, d2y, dx2, dy2, dx4, dy4, ymatric
 	common /param/ nt
-c
-c=================== include co2.h ===================================
-c
+
+C     Carbon-cycle and CO2 declarations
 	common /param/ anthropogenic_co2, stf
 	common /param/ co2_flux_region_sum, area_of_region
 	common /param/ jcfc_count, jcfc_base, rpCFC
@@ -111,14 +95,8 @@ c
 	common /param/ rkwco2, rkwo2, izone(19), izone_opt(19)
 	real stf
 	integer izone
-c
-c==================== end co2.h ======================================
-c
-	
-c
-c====================== file.h ======================================
-c for file index definitions
-c
+
+C     Input and output file indices
         integer ifile_unit
         common /param/ ifile_unit(5)
         character*5 ifile_name
@@ -132,9 +110,7 @@ c
 	data ifile_name(4)/'t.trm'/
 	data ifile_name(5)/'s.trm'/
 
-c
-c===================== snaps.h ===========================================
-c
+C     Snapshot and NetCDF declarations
         parameter (itime=1)
         integer ncid,vlonid,vlatid,vdepthid,vtimeid
         integer start4,start3(3),count4(4),count3(3), count33(3)
@@ -167,7 +143,7 @@ c
         common stamp_time_daily(365)
         dimension start4(4)
         integer number_of_snap
-	
+
 	integer vvar3did(nvar3d), ncid_var3d(nvar3d)
 	integer vlonid_var3d(nvar3d), vlatid_var3d(nvar3d)
 	integer vdepthid_var3d(nvar3d), vtimeid_var3d(nvar3d)
@@ -176,14 +152,14 @@ c
 	integer vardim_var3d(4,nvar3d), vardim_var3d_pass(4)
 	character*4 var3d_units
 	character*4 var3d_char
-	character*88 var3d_file_name  
+	character*88 var3d_file_name
 	character*21 ncaptc_var3d
 	dimension ncaptc_var3d(nvar3d)
 	dimension var3d_file_name(nvar3d)
 	dimension var3d_char(nvar3d), var3d_units(nvar3d)
-	data var3d_char /"DICT", "FLUX", "PHOS", "ALKT", "DOPT"/ 
-	data var3d_units /"m/m3", "m/m2", "m/m3", "m/m3", "m/m3"/ 
-	
+	data var3d_char /"DICT", "FLUX", "PHOS", "ALKT", "DOPT"/
+	data var3d_units /"m/m3", "m/m2", "m/m3", "m/m3", "m/m3"/
+
 	data start3/1,1,1/
         data start2/1,1/
         data count2/imt,jmt/
@@ -191,35 +167,21 @@ c
         data count3/imt,jmt,itime/
         data count33/imt,km,jmt/
 
-#include "stamp.h"	
-c
-c==================== end of snaps.h ======================================c
-c
-c
+#include "stamp.h"
 
-c
-c==================== include isopyc.h ===============================
-c
+C     Isopycnal coefficients
 	 risopicSmax = 1.0e-2
-c         rAITH = 1.e3   ! horizontal GM bolus velocity coeff.
-         rAI = 1.e3     ! horizontal Redi flux coeff.
-         rAIvert = 1.e-3 ! vertical Redi flux coeff.
-         !!! These coefficients are re-defined inside the
-         !!! gm-iso-.F and diffusion.F files with a latitudinal
-         !!! factor in order to reduce the mangnitude of coefficient
-         !!! in a converging meridion. (3-Mar-2007)
-c
-c=================== end isopyc.h =====================================
-c
+         rAI = 1.e3
+         rAIvert = 1.e-3
 
-
+C     Grid indices and physical constants
 	im = i - 1
 	jm = j - 1
 	kmone = k - 1
 	ip = i + 1
 	jp = j + 1
 	kp = k + 1
-	
+
 	A1 = 0.92
         A2 = 0.74
         B1 = 16.6
@@ -236,14 +198,13 @@ c
         pi = 3.14159265359
         deg2rad = pi/180.0
 	Re = 6368.0e3
-	
-	
+
 	deg2meter = deg2rad*Re
 	dxd= 1.0/1.0
 	dyd= 1.0/1.0
-	reflon = 72.5  ! global 1x1 ORAS4_ASSIM
-	reflat_start = -79.25  ! global 2x2
-	reflat_start = -81.50  ! java
+	reflon = 72.5
+	reflat_start = -79.25
+	reflat_start = -81.50
 	reflat = -0.25 - (-reflat_start - (jmt*dyd + reflat_start))/2.0
 	dx=dxd*deg2meter
         dy=dyd*deg2meter
@@ -254,52 +215,39 @@ c
         dx4=dx2*dx2
         dy4=dy2*dy2
         dphi=dxd*deg2rad
-c        dthe=dyd*deg2rad
 	d2phi=2.0*dphi
-c        d2the=2.0*dthe
-	
 
         rho0 = 1022.0
         cp = 4217.4
-	
+
 	day2sec = 86400.0
 	year2sec = day2sec*365.0
-	dt = 86400  ! time step for interpolation
-	dtts = 2.0*dt
-	split_dt = 7200 ! tracer time step
+	split_dt = 7200
 	split_dtts = 2.0*split_dt
 	rimpl_factor = 0.5
 	alpha_asselin = 0.05
 	relaxation_time = 30*day2sec
-	
-c	Ah = 1.0e-3  ! most reliable version for six months
-c	Ah = 1.0e-6
+
 	Ah_back = 1.0e-4
 	Ah_max = 0.01
-c	Am = 2.0e4
-	
+
 	shf = 0.0
         swf = 0.0001
-c        stf = 0.0 ! suppressing initialization here
-c
-c co2 injection region in lon lat cooridnate
-c
-	lon_start = 280    ! add reflon in mind
-	lon_end = 365      ! add reflon in mind
-	lat_start = 65.0   ! region 3 for GFDL_ASSIM
-	lat_end = 78.0  ! region 3 for GFDL_ASSIM
-	
+	lon_start = 280
+	lon_end = 365
+	lat_start = 65.0
+	lat_end = 78.0
+
 	lon_start = int ( ((lon_start/dxd) - reflon/dxd))
 	lon_end = int ( ((lon_end/dxd) - reflon/dxd))
 	lat_start = int ( ((lat_start/dyd) + abs(reflat_start)/dyd))
 	lat_end = int ( ((lat_end/dyd + abs(reflat_start)/dyd)))
-	
+
 	i_co2_injection_region(1) = lon_start
         i_co2_injection_region(2) = lon_end
         j_co2_injection_region(1) = lat_start
         j_co2_injection_region(2) = lat_end
-	
-	
+
 	iread_u = 1
 	iread_v = 2
 	iread_w = 3

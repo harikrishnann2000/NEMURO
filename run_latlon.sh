@@ -1,8 +1,8 @@
 i=1
 while [ $i -le 1 ] #!! <=== USER INPUT 1
 do
-lon_in=`sed "${i}q;d" stations.txt | cut -d ' ' -f1`
-lat_in=`sed "${i}q;d" stations.txt | cut -d ' ' -f2`
+lon_in=`sed "${i}q;d" stations_test.txt | cut -d ' ' -f1`
+lat_in=`sed "${i}q;d" stations_test.txt | cut -d ' ' -f2`
 #echo $lon_in $lat_in
 DIR_IN=`echo "INPUT_"$lon_in"_"$lat_in`
 FILE_OUT=`echo "OUT_"$lon_in"_"$lat_in".txt"`
@@ -17,7 +17,7 @@ ferret -nojnl << EOF
 let lon_in = $lon_in                 
 let lat_in = $lat_in     
 let clm_init = 1                   
-set reg/t=01-jan-2013:31-dec-2017  !! <=== USER INPUT 2
+set reg/t=01-jan-2014:31-dec-2018  !! <=== USER INPUT 2
 
 sp mkdir $DIR_IN
 
@@ -33,18 +33,18 @@ use FORCING_DATA/SPE_HUM_2010_2022_1H_SHIFT_MEAN.nc ! 6-hr interval
 use FORCING_DATA/U10_2010_2022_1H_SHIFT_MEAN.nc ! 6-hr interval
 use FORCING_DATA/V10_2010_2022_1H_SHIFT_MEAN.nc ! 6-hr interval
 use FORCING_DATA/SSS_2011_2022_3DAY_FILL.nc ! 3-day interval
-use FORCING_DATA/WVEL_2013_2018_3DAY_250m_FILL.nc ! 3-day interval
+use FORCING_DATA/WVEL_2013_2018_3DAY_250m_FILL_interp.nc ! 3-day interval
 
-use FORCING_DATA/salt_5m_cli_fill.nc ! Annual mean
-use FORCING_DATA/temp_5m_cli_fill.nc ! Annual mean
-use FORCING_DATA/woa18_nitrate_01_12_MON_250m_fill.nc !Seasonal mean
-use FORCING_DATA/woa18_silicate_01_12_MON_250m_fill.nc !Seasonal mean
+use FORCING_DATA/salt_5m_cli_fill_interp.nc ! Annual mean
+use FORCING_DATA/temp_5m_cli_fill_interp.nc ! Annual mean
+use FORCING_DATA/woa18_nitrate_01_12_MON_250m_fill_interp.nc !Seasonal mean
+use FORCING_DATA/woa18_silicate_01_12_MON_250m_fill_interp.nc !Seasonal mean
 
-use FORCING_DATA/TCO2_Climatological_Mean.nc !Climatological Mean
-use FORCING_DATA/TALK_Climatological_Mean.nc !Climatological Mean
+use FORCING_DATA/TCO2_Climatological_Mean_interp.nc !Climatological Mean
+use FORCING_DATA/TALK_Climatological_Mean_interp.nc !Climatological Mean
 
 use FORCING_DATA/pCO2atm_2013_2018_daily.nc ! NEWWWW
-use FORCING_DATA/Ontogenetic.nc ! NEWWW
+use FORCING_DATA/Ontogenetic_interp.nc ! NEWWW
 
 save/clobber/x=${lon_in}/y=${lat_in}/format=(f22.10)/nohead/k=1/file="./INPUT/air_temp_data_for_argo11.txt" t2m[d=1] - 273.15  ! 6-hourly data
 save/clobber/x=${lon_in}/y=${lat_in}/format=(f22.10)/nohead/k=1/file="./INPUT/ppt_data_for_argo11.txt" tp[d=2]/(60*60) ! for hourly total precipitation to rain in m/s ! 12-hourly data
@@ -115,7 +115,7 @@ argo_no='11'
 echo "-------------------------------------------------------------------------"
 echo "*****************MODEL RUN START*********************"
 echo "-------------------------------------------------------------------------"
-sed  -e  "s/details_argo/details_argo$argo_no/g" main_ver7_argo.F  > main01.F
+sed  -e  "s/details_argo/details_argo$argo_no/g" main_ver7_argo_test.F  > main01.F
 sed  -e  "s/air_temp_data/air_temp_data_for_argo$argo_no/g"  main01.F > main0.F
 sed  -e  "s/uwnd_data/uwnd_data_for_argo$argo_no/g" main0.F > main1.F
 sed  -e  "s/vwnd_data/vwnd_data_for_argo$argo_no/g" main1.F > main2.F
@@ -139,7 +139,7 @@ sed  -e  "s/ontofact_data/ontofact_data_for_argo$argo_no/g" main15.F > main16.F 
 
 
 
-sed  -e  "s/argo/argo$argo_no/g" relaxation_nutrients_ver2.F > relax.F
+sed  -e  "s/argo/argo$argo_no/g" relaxation_nutrients_ver2_test.F > relax.F
 #======================================================================
 
 
@@ -148,11 +148,11 @@ mkdir -p $TMPDIR
 
 
 rm ionmr.out
-echo "ifort -Dsnap_tracer -I/opt/cray/pe/netcdf/4.4.1.1.3/INTEL/16.0/include -g -traceback -extend-source 132 -O3 -L/opt/cray/pe/netcdf/4.4.1.1.3/INTEL/16.0/lib main16.F nemuro_3D_ver2.F moto_v7_ver4.F implicit.F snaps.F stresstc.F  Irradiance_with_depth.F daily_average.F relax.F co2calc_SWS.F  co2flux.F  drtsafe.F ta_iter_SWS.F scco2.F -mkl -lnetcdff"
+echo "ifort -Dsnap_tracer -I/opt/cray/pe/netcdf/4.4.1.1.3/INTEL/16.0/include -g -traceback -extend-source 132 -O3 -L/opt/cray/pe/netcdf/4.4.1.1.3/INTEL/16.0/lib main16.F nemuro_3D_ver2_test.F moto_v7_ver4_test.F implicit.F snaps.F stresstc.F  Irradiance_with_depth_test.F daily_average_test.F relax.F co2calc_SWS.F  co2flux.F  drtsafe.F ta_iter_SWS.F scco2.F -mkl -lnetcdff"
 ifort -o ionmr.out -Dsnap_tracer -g -traceback -extend-source 132 -O3 \
 $(nf-config --fflags) \
-main16.F nemuro_3D_ver2.F moto_v7_ver4.F implicit.F snaps.F stresstc.F \
-Irradiance_with_depth.F daily_average.F relax.F \
+main16.F nemuro_3D_ver2_test.F moto_v7_ver4_test.F implicit.F snaps.F stresstc.F \
+Irradiance_with_depth_test.F daily_average_test.F relax.F \
 co2calc_SWS.F  co2flux.F  drtsafe.F ta_iter_SWS.F scco2.F \
 $(nf-config --flibs) -mkl
 
@@ -173,5 +173,3 @@ echo "-------------------------------------------------------------------------"
 ######################################################################
 i=$(( $i + 1 ))
 done
-
-rm main?.F main??.F

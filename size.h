@@ -43,6 +43,8 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 	double precision adv_vt_bup, adv_vb_bup
         double precision adv_ve_bup, adv_vw_bup
         double precision adv_vn_bup, adv_vs_bup
+C       dz/dzb are vertical-grid arrays and remain double precision.
+C       The selected uniform dz is assigned by main from dz_input.
 	double precision dz, dzb
 	double precision jpo4, jdop, jo2, jdic, jalk, ppo4star, jrrcv
 	double precision rbgc_Sb, rbgc_Sb_Ca
@@ -216,3 +218,4 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 	common /size/ jstart(nproc), jend(nproc)
         common /size/ i_co2_injection_region(2)
 	common /size/ j_co2_injection_region(2)
+

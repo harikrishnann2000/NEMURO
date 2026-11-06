@@ -1,0 +1,8 @@
+*mod
+*.o
+*.nc
+*.gif
+ERR*
+FORCING_DATA/
+INPUT*/
+OUTPUT/
